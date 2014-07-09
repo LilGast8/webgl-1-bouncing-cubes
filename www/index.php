@@ -88,6 +88,7 @@
 
 <!-- Partials views -->
 <!-- <script src="<?php echo WEB_ROOT; ?>src/js/app/com/views/partials/View.Example.js"></script> -->
+<script src="<?php echo WEB_ROOT; ?>src/js/app/com/views/partials/View.Cube.js"></script>
 
 <!-- Page views -->
 <script src="<?php echo WEB_ROOT; ?>src/js/app/com/views/pages/View.Index.js"></script>
