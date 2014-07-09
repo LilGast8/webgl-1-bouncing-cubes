@@ -1,0 +1,28 @@
+
+# -------- Disable magic quotes -------- #
+SetEnv MAGIC_QUOTES 0
+
+
+# -------- Active PHP 5 -------- #
+SetEnv PHP_VER 5
+
+
+IndexIgnore */*
+
+RewriteEngine on
+
+
+
+
+
+# ------------------------ #
+# -------- ASSETS -------- #
+# ------------------------ #
+
+
+# -------- TO DISABLE IN PROD -------- #
+RewriteRule json/(.*)$ src/json/$1 [L]
+RewriteRule img/(.*)$ src/img/$1 [L]
+
+RewriteRule json/(.*)$ assets/json/$1 [L]
+RewriteRule img/(.*)$ assets/img/$1 [L]
