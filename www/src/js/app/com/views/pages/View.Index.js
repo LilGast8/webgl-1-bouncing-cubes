@@ -18,6 +18,7 @@ APP.Views.Index = (function(window){
 		this.NB_Y_ROWS = 3;
 		this.NB_CUBES = this.NB_X_ROWS*this.NB_Y_ROWS;
 		this.aCubes = [];
+		this.aMeshCubes = [];
 	}
 	
 	
@@ -37,7 +38,8 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.bindEvents = function() {
-		
+		this.clickSceneProxy = $.proxy(_click, this);
+		this.$.sceneContainer.on('click', this.clickSceneProxy);
 	};
 	
 	
@@ -48,12 +50,16 @@ APP.Views.Index = (function(window){
 	
 	var _initScene = function() {
 		this.scene = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera(50, APP.Main.windowW/APP.Main.windowH, 0.1, 1000);
-		this.renderer = new THREE.WebGLRenderer({antialias:true});
-		this.projector = new THREE.Projector();
 		
+		this.camera = new THREE.PerspectiveCamera(50, APP.Main.windowW/APP.Main.windowH, 0.1, 1000);
+		this.camera.position.set(0, 0, 500);
+		
+		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
+		this.renderer.setClearColor(0x333333);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
+		
+		this.projector = new THREE.Projector();
 		
 		
 		/* -------- Light 1 -------- */
@@ -87,9 +93,6 @@ APP.Views.Index = (function(window){
 		this.spotLight.position.set(-500, 250, 500);
 		this.scene.add(this.spotLight);
 		*/
-		
-		
-		this.camera.position.z = 500;
 	};
 	
 	
@@ -102,6 +105,7 @@ APP.Views.Index = (function(window){
 			cube = new APP.Views.Cube(i+1, posX, posY);
 			cube.init();
 			this.aCubes.push(cube);
+			this.aMeshCubes.push(cube.cube);
 			
 			posX += 200;
 			if(i%this.NB_X_ROWS == this.NB_X_ROWS-1) {
@@ -122,6 +126,24 @@ APP.Views.Index = (function(window){
 		this.renderer.render(this.scene, this.camera);
 		
 		APP.Main.stats.end();
+	};
+	
+	
+	var _click = function(e) {
+		var mouseVectorX = (e.clientX/APP.Main.windowW)*2-1;
+		var mouseVectorY = -(e.clientY/window.innerHeight)*2+1;
+		var mouseVector = new THREE.Vector3( mouseVectorX, mouseVectorY, 0.5);
+		this.projector.unprojectVector( mouseVector, this.camera );
+		var raycaster = new THREE.Raycaster( this.camera.position, mouseVector.sub(this.camera.position).normalize());
+		
+		var intersects = raycaster.intersectObjects(this.aMeshCubes);
+		
+		if(intersects.length > 0) {
+		//	console.log(intersects[ 0 ].object);
+			intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
+		}
+		
+		return false;
 	};
 	
 	

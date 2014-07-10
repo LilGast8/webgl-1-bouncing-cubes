@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 	
-	<title>R&amp;D - Gaston Bouchayer</title>
+	<title>WebGL - Test 1 - Gaston Bouchayer</title>
 	<meta name="description" content="R&amp;D - Gaston Bouchayer" />
 	<meta name="keywords" content="" />
 	<meta name="robots" content="index, follow" />

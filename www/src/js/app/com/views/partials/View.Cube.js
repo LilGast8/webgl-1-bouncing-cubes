@@ -13,8 +13,10 @@ APP.Views.Cube = (function(window){
 		
 		this.x = x;
 		this.y = y;
+		this.z = -200;
 		this.rotationX = Math.random()*0.1-0.05;
 		this.rotationY = Math.random()*0.1-0.05;
+		this.rotationZ = Math.random()*0.1-0.05;
 		
 		this.scene = null;
 		this.cube = null;
@@ -36,7 +38,7 @@ APP.Views.Cube = (function(window){
 		this.cube = new THREE.Mesh(geometry, material);
 		this.cube.position.x = this.x;
 		this.cube.position.y = this.y;
-		this.cube.position.z = -200;
+		this.cube.position.z = this.z;
 		
 		this.scene.add(this.cube);
 	};
@@ -50,6 +52,13 @@ APP.Views.Cube = (function(window){
 	Cube.prototype.render = function() {
 		this.cube.rotation.x += this.rotationX;
 		this.cube.rotation.y += this.rotationY;
+		this.cube.rotation.z += this.rotationZ;
+	};
+	
+	
+	Cube.prototype.bounce = function() {
+		console.log('BOUNCE', this.name);
+		TweenLite.to(this.cube.position, 1.5, {z:0, ease:Bounce.easeOut});
 	};
 	
 	
