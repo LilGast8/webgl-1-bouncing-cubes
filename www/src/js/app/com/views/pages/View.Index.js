@@ -40,6 +40,9 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.bindEvents = function() {
+		this.resizeWindowProxy = $.proxy(_resize, this);
+		APP.Main.$.window.on('resize', this.resizeWindowProxy);
+		
 		this.mouseMoveSceneProxy = $.proxy(_kick, this);
 		this.$.sceneContainer.on('mousemove', this.mouseMoveSceneProxy);
 	};
@@ -47,6 +50,16 @@ APP.Views.Index = (function(window){
 	
 	Index.prototype.unbindEvents = function() {
 		
+	};
+	
+	
+	var _resize = function() {
+		APP.Main.resize();
+		
+		this.camera.aspect = APP.Main.windowW/APP.Main.windowH;
+		this.camera.updateProjectionMatrix();
+		
+		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
 	};
 	
 	
@@ -60,16 +73,13 @@ APP.Views.Index = (function(window){
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
 	//	this.renderer.setClearColor(0xdddddd);
 		this.renderer.setClearColor(0x000000);
+	//	this.renderer.setClearColor(Math.random()*0xffffff);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
 		this.projector = new THREE.Projector();
 		this.mouseVector = new THREE.Vector3();
 		
-		
 	//	this.pointLight = new THREE.PointLight(0xffffff, 2, 3000);
-	//	this.pointLight.position.set(0, 0, 3000);
-	//	this.scene.add(this.pointLight);
-		
 		this.pointLight = new THREE.PointLight(0xffffff, 2, 4000);
 		this.pointLight.position.set(0, 0, 3000);
 		this.scene.add(this.pointLight);
