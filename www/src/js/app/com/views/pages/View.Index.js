@@ -58,45 +58,21 @@ APP.Views.Index = (function(window){
 		
 		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
-		this.renderer.setClearColor(0xdddddd);
-	//	this.renderer.setClearColor(0x000000);
+	//	this.renderer.setClearColor(0xdddddd);
+		this.renderer.setClearColor(0x000000);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
 		this.projector = new THREE.Projector();
 		this.mouseVector = new THREE.Vector3();
 		
 		
-		/* -------- Light 1 -------- */
-		this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-		this.directionalLight.position.set(-500, -500, 1000);
-		this.scene.add(this.directionalLight);
+	//	this.pointLight = new THREE.PointLight(0xffffff, 2, 3000);
+	//	this.pointLight.position.set(0, 0, 3000);
+	//	this.scene.add(this.pointLight);
 		
-		
-		/* -------- Light 2 -------- *
-		this.ambientLight = new THREE.AmbientLight(0x333333);
-		this.scene.add(this.ambientLight);
-		
-		this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
-		this.directionalLight.position.set(-20, 20, 200);
-		this.scene.add(this.directionalLight);
-		*/
-		
-		/* -------- Light 3 -------- *
-		this.pointLight = new THREE.PointLight(0xffffff, 1, 1000);
-		this.pointLight.position.set(0, 0, 100);
+		this.pointLight = new THREE.PointLight(0xffffff, 2, 4000);
+		this.pointLight.position.set(0, 0, 3000);
 		this.scene.add(this.pointLight);
-		*/
-		
-		/* -------- Light 4 -------- *
-		this.hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x000000, 1);
-		this.scene.add(this.hemisphereLight);
-		*/
-		
-		/* -------- Light 5 -------- *
-		this.spotLight = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/3, 150);
-		this.spotLight.position.set(-500, 250, 500);
-		this.scene.add(this.spotLight);
-		*/
 	};
 	
 	
@@ -134,6 +110,10 @@ APP.Views.Index = (function(window){
 	
 	
 	var _kick = function(e) {
+		var posX = (-APP.Main.windowW/2+e.clientX)*2;
+		var posY = (APP.Main.windowH/2-e.clientY)*2;
+		TweenLite.to(this.pointLight.position, 1.5, {x:posX, y:posY, ease:Quad.easeOut});
+		
 		this.mouseVector.x = (e.clientX/APP.Main.windowW)*2-1;
 		this.mouseVector.y = -(e.clientY/window.innerHeight)*2+1;
 		var raycaster = this.projector.pickingRay(this.mouseVector, this.camera);
