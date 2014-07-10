@@ -12,7 +12,9 @@ APP.Views.Index = (function(window){
 		this.scene = null;
 		this.camera = null;
 		this.renderer = null;
+		
 		this.projector = null;
+		this.mouseVector = null;
 		
 		this.NB_X_ROWS = 5;
 		this.NB_Y_ROWS = 3;
@@ -60,6 +62,7 @@ APP.Views.Index = (function(window){
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
 		this.projector = new THREE.Projector();
+		this.mouseVector = new THREE.Vector3();
 		
 		
 		/* -------- Light 1 -------- */
@@ -130,11 +133,9 @@ APP.Views.Index = (function(window){
 	
 	
 	var _click = function(e) {
-		var mouseVectorX = (e.clientX/APP.Main.windowW)*2-1;
-		var mouseVectorY = -(e.clientY/window.innerHeight)*2+1;
-		var mouseVector = new THREE.Vector3( mouseVectorX, mouseVectorY, 0.5);
-		this.projector.unprojectVector( mouseVector, this.camera );
-		var raycaster = new THREE.Raycaster( this.camera.position, mouseVector.sub(this.camera.position).normalize());
+		this.mouseVector.x = (e.clientX/APP.Main.windowW)*2-1;
+		this.mouseVector.y = -(e.clientY/window.innerHeight)*2+1;
+		var raycaster = this.projector.pickingRay(this.mouseVector, this.camera);
 		
 		var intersects = raycaster.intersectObjects(this.aMeshCubes);
 		
