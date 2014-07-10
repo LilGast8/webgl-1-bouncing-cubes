@@ -21,6 +21,13 @@ APP.Views.Index = (function(window){
 		this.NB_CUBES = this.NB_X_ROWS*this.NB_Y_ROWS;
 		this.aCubes = [];
 		this.aMeshCubes = [];
+		
+		this.DIST_MIN = 4000;
+		this.DIST_MAX = 7000;
+		this.SPEED_ENLARGE = 20;
+		this.SPEED_REDUCE = 50;
+		
+		this.isEnlarge = false;
 	}
 	
 	
@@ -45,6 +52,12 @@ APP.Views.Index = (function(window){
 		
 		this.mouseMoveSceneProxy = $.proxy(_kick, this);
 		this.$.sceneContainer.on('mousemove', this.mouseMoveSceneProxy);
+		
+		this.mouseDownSceneProxy = $.proxy(_enlargeLight, this);
+		this.$.sceneContainer.on('mousedown', this.mouseDownSceneProxy);
+		
+		this.mouseUpSceneProxy = $.proxy(_reduceLight, this);
+		this.$.sceneContainer.on('mouseup', this.mouseUpSceneProxy);
 	};
 	
 	
@@ -80,7 +93,7 @@ APP.Views.Index = (function(window){
 		this.mouseVector = new THREE.Vector3();
 		
 	//	this.pointLight = new THREE.PointLight(0xffffff, 2, 3000);
-		this.pointLight = new THREE.PointLight(0xffffff, 2, 4000);
+		this.pointLight = new THREE.PointLight(0xffffff, 2, this.DIST_MIN);
 		this.pointLight.position.set(0, 0, 3000);
 		this.scene.add(this.pointLight);
 	};
@@ -112,6 +125,8 @@ APP.Views.Index = (function(window){
 		for(var i=0; i<this.aCubes.length; i++) {
 			this.aCubes[i].render();
 		}
+		
+		_manageLightDistance.call(this);
 		
 		this.renderer.render(this.scene, this.camera);
 		
@@ -145,6 +160,26 @@ APP.Views.Index = (function(window){
 		}
 		
 		return false;
+	};
+	
+	
+	var _enlargeLight = function() {
+		this.isEnlarge = true;
+	};
+	
+	
+	var _reduceLight = function() {
+		this.isEnlarge = false;
+	};
+	
+	
+	var _manageLightDistance = function() {
+		var lightDistance = this.pointLight.distance;
+		
+		if(this.isEnlarge && lightDistance<this.DIST_MAX) 
+			this.pointLight.distance += this.SPEED_ENLARGE;
+		else if(!this.isEnlarge && lightDistance>this.DIST_MIN) 
+			this.pointLight.distance -= this.SPEED_REDUCE;
 	};
 	
 	
