@@ -48,6 +48,7 @@ APP.Main = (function(window) {
 		
 		APP.Config.init();
 		APP.Views.Index.init();
+		APP.DatGui.init();
 		
 	//	_bindEvents.call(this);
 	};

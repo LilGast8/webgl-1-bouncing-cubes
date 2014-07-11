@@ -23,6 +23,8 @@ APP.Views.Index = (function(window){
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
+		this.colorizationType = 'FromGrayToColorToGray';
+		
 		this.DIST_MIN = 4000;
 		this.DIST_MAX = 7000;
 		this.SPEED_ENLARGE = 20;
@@ -82,6 +84,7 @@ APP.Views.Index = (function(window){
 		
 		this.camera = new THREE.PerspectiveCamera(50, APP.Main.windowW/APP.Main.windowH, 1, 20000);
 	//	this.camera.position.set(0, 0, 3300);
+		this.camera.position.set(0, 0, 5500);
 		
 	//	this.camera.position.set(0, -2500, 300);
 	//	this.camera.rotation.set(-80, 0, 0);
@@ -90,6 +93,7 @@ APP.Views.Index = (function(window){
 	//	this.camera.rotation.set(0, 0, 0);
 	//	this.camera.position.set(-4500, -3500, 1300);
 	//	this.camera.rotation.set(1.5, -1, 0);
+		
 		
 		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
@@ -101,7 +105,7 @@ APP.Views.Index = (function(window){
 		
 		
 		
-		this.camera.position.set(0, 0, 5500);
+		
 		
 		this.cubeContainer = new THREE.Object3D();
 		this.cubeContainer.position.set(390, 0, 0);

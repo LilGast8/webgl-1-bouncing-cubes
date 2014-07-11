@@ -17,7 +17,7 @@ APP.Views.Cube = (function(window){
 		this.rotationX = Math.random()*0.1-0.05;
 		this.rotationY = Math.random()*0.1-0.05;
 		this.rotationZ = Math.random()*0.1-0.05;
-		this.greyId = null;
+		this.grayId = null;
 		
 		this.isKicked = false;
 		this.coeffRotation = 1;
@@ -39,9 +39,9 @@ APP.Views.Cube = (function(window){
 	//	var color = new THREE.Color();
 	//	color.setRGB(Math.random(), Math.random(), Math.random());
 		
-		var greyId = Math.round(Math.random()*255);
-		var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
-		this.greyId = color.r;
+		var grayId = Math.round(Math.random()*255);
+		var color = new THREE.Color('rgb('+grayId+','+grayId+','+grayId+')');
+		this.grayId = color.r;
 		
 		var geometry = new THREE.BoxGeometry(100, 100, 100);
 		var material = new THREE.MeshPhongMaterial({color:color});
@@ -77,11 +77,22 @@ APP.Views.Cube = (function(window){
 		var cubeDelay = cubeUpDur-0.5;
 		
 		var toColorDur = cubeDelay;
-		var toGreyDur = 0.9;
-		var toGreyDelay = cubeDownDur-toGreyDur;
+		var toGrayDur = 0.9;
+		var toGrayDelay = cubeDownDur-toGrayDur;
 		
-		TweenLite.to(this.cube.material.color, toColorDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
-		TweenLite.to(this.cube.material.color, toGreyDur, {r:this.greyId, g:this.greyId, b:this.greyId, ease:Quad.easeOut, delay:toGreyDelay});
+		
+	//	if(APP.Views.Index.colorizationType == 'GrayToColorToGray') console.log('GrayToColorToGray');
+	//	else if(APP.Views.Index.colorizationType == 'GrayToColor') console.log('GrayToColor');
+	//	else if(APP.Views.Index.colorizationType == 'ColorToColor') console.log('ColorToColor');
+		
+		if(APP.Views.Index.colorizationType == 'FromGrayToColorToGray') {
+			TweenLite.to(this.cube.material.color, toColorDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
+			TweenLite.to(this.cube.material.color, toGrayDur, {r:this.grayId, g:this.grayId, b:this.grayId, ease:Quad.easeOut, delay:toGrayDelay});
+		}
+		else if(APP.Views.Index.colorizationType == 'FromGrayToColor') 
+			TweenLite.to(this.cube.material.color, cubeUpDur+cubeDownDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
+
+		
 		
 		TweenLite.to(this, cubeUpDur, {coeffRotation:0.1, ease:Quad.easeOut});
 		TweenLite.to(this, cubeDownDur, {coeffRotation:1, ease:Quad.easeOut, delay:cubeDelay});
