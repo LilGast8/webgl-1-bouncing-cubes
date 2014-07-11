@@ -99,21 +99,27 @@ APP.Views.Index = (function(window){
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
 		
-		this.camera.position.set(0, 0, 4000);
+		
+		
+		this.camera.position.set(0, 0, 5500);
 		
 		this.cubeContainer = new THREE.Object3D();
-		this.cubeContainer.position.set(500, -300, 200);
-		var rotX = -85*Math.PI/180;
+		this.cubeContainer.position.set(390, 0, 0);
+		var rotX = -65*Math.PI/180;
 		var rotY = 0*Math.PI/180;
-		var rotZ = 45*Math.PI/180;
+		var rotZ = 40*Math.PI/180;
 		this.cubeContainer.rotation.set(rotX, rotY, rotZ);
 		this.scene.add(this.cubeContainer);
+		
+		
+		
+		
 		
 		this.projector = new THREE.Projector();
 		this.mouseVector = new THREE.Vector3();
 		
 		this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-		this.directionalLight.position.set(0, 0, 1500);
+		this.directionalLight.position.set(0, 0, 800);
 		this.scene.add(this.directionalLight);
 		
 		

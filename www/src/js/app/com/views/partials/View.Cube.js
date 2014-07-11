@@ -17,6 +17,7 @@ APP.Views.Cube = (function(window){
 		this.rotationX = Math.random()*0.1-0.05;
 		this.rotationY = Math.random()*0.1-0.05;
 		this.rotationZ = Math.random()*0.1-0.05;
+		this.greyId = null;
 		
 		this.isKicked = false;
 		this.coeffRotation = 1;
@@ -37,8 +38,10 @@ APP.Views.Cube = (function(window){
 		
 	//	var color = new THREE.Color();
 	//	color.setRGB(Math.random(), Math.random(), Math.random());
-		var idColor = Math.round(Math.random()*255);
-		var color = new THREE.Color('rgb('+idColor+','+idColor+','+idColor+')');
+		
+		var greyId = Math.round(Math.random()*255);
+		var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
+		this.greyId = color.r;
 		
 		var geometry = new THREE.BoxGeometry(100, 100, 100);
 		var material = new THREE.MeshPhongMaterial({color:color});
@@ -69,18 +72,23 @@ APP.Views.Cube = (function(window){
 		if(this.isKicked) return false;
 		else this.isKicked = true;
 		
-		var durUp = 1.5;
-		var durDown = 3;
-		var delay = durUp-0.5;
+		var cubeUpDur = 1.5;
+		var cubeDownDur = 3;
+		var cubeDelay = cubeUpDur-0.5;
 		
-		TweenLite.to(this.cube.material.color, durUp+durDown, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
+		var toColorDur = cubeDelay;
+		var toGreyDur = 0.9;
+		var toGreyDelay = cubeDownDur-toGreyDur;
 		
-		TweenLite.to(this, durUp, {coeffRotation:0.1, ease:Quad.easeOut});
-		TweenLite.to(this, durDown, {coeffRotation:1, ease:Quad.easeOut, delay:delay});
+		TweenLite.to(this.cube.material.color, toColorDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
+		TweenLite.to(this.cube.material.color, toGreyDur, {r:this.greyId, g:this.greyId, b:this.greyId, ease:Quad.easeOut, delay:toGreyDelay});
 		
-		TweenLite.to(this.cube.position, durUp, {z:2000, ease:Quart.easeOut});
+		TweenLite.to(this, cubeUpDur, {coeffRotation:0.1, ease:Quad.easeOut});
+		TweenLite.to(this, cubeDownDur, {coeffRotation:1, ease:Quad.easeOut, delay:cubeDelay});
+		
+		TweenLite.to(this.cube.position, cubeUpDur, {z:2000, ease:Quart.easeOut});
 		var self = this;
-		TweenLite.to(this.cube.position, durDown, {z:0, ease:Bounce.easeOut, delay:delay, onComplete:function(){
+		TweenLite.to(this.cube.position, cubeDownDur, {z:0, ease:Bounce.easeOut, delay:cubeDelay, onComplete:function(){
 			self.isKicked = false;
 		}});
 	};
