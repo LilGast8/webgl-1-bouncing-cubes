@@ -22,6 +22,7 @@ APP.Views.Cube = (function(window){
 		this.coeffRotation = 1;
 		
 		this.scene = null;
+		this.cubeContainer = null;
 		this.cube = null;
 	}
 	
@@ -32,9 +33,13 @@ APP.Views.Cube = (function(window){
 	
 	Cube.prototype.initElt = function() {
 		this.scene = APP.Views.Index.scene;
+		this.cubeContainer = APP.Views.Index.cubeContainer;
 		
-		var color = new THREE.Color(0xffffff);
-		color.setRGB(Math.random(), Math.random(), Math.random());
+	//	var color = new THREE.Color();
+	//	color.setRGB(Math.random(), Math.random(), Math.random());
+		var idColor = Math.round(Math.random()*255);
+		var color = new THREE.Color('rgb('+idColor+','+idColor+','+idColor+')');
+		
 		var geometry = new THREE.BoxGeometry(100, 100, 100);
 		var material = new THREE.MeshPhongMaterial({color:color});
 		
@@ -43,7 +48,8 @@ APP.Views.Cube = (function(window){
 		this.cube.position.y = this.y;
 		this.cube.position.z = this.z;
 		
-		this.scene.add(this.cube);
+	//	this.scene.add(this.cube);
+		this.cubeContainer.add(this.cube);
 	};
 	
 	

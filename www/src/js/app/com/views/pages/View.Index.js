@@ -12,6 +12,7 @@ APP.Views.Index = (function(window){
 		this.scene = null;
 		this.camera = null;
 		this.renderer = null;
+		this.cubeContainer = null;
 		
 		this.projector = null;
 		this.mouseVector = null;
@@ -80,7 +81,15 @@ APP.Views.Index = (function(window){
 		this.scene = new THREE.Scene();
 		
 		this.camera = new THREE.PerspectiveCamera(50, APP.Main.windowW/APP.Main.windowH, 1, 20000);
-		this.camera.position.set(0, 0, 3300);
+	//	this.camera.position.set(0, 0, 3300);
+		
+	//	this.camera.position.set(0, -2500, 300);
+	//	this.camera.rotation.set(-80, 0, 0);
+		
+	//	this.camera.position.set(-3000, -1500, 3300);
+	//	this.camera.rotation.set(0, 0, 0);
+	//	this.camera.position.set(-4500, -3500, 1300);
+	//	this.camera.rotation.set(1.5, -1, 0);
 		
 		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
@@ -89,13 +98,29 @@ APP.Views.Index = (function(window){
 	//	this.renderer.setClearColor(Math.random()*0xffffff);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
+		
+		this.camera.position.set(0, 0, 4000);
+		
+		this.cubeContainer = new THREE.Object3D();
+		this.cubeContainer.position.set(500, -300, 200);
+		var rotX = -85*Math.PI/180;
+		var rotY = 0*Math.PI/180;
+		var rotZ = 45*Math.PI/180;
+		this.cubeContainer.rotation.set(rotX, rotY, rotZ);
+		this.scene.add(this.cubeContainer);
+		
 		this.projector = new THREE.Projector();
 		this.mouseVector = new THREE.Vector3();
 		
-	//	this.pointLight = new THREE.PointLight(0xffffff, 2, 3000);
+		this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		this.directionalLight.position.set(0, 0, 1500);
+		this.scene.add(this.directionalLight);
+		
+		
+		this.pointLight = new THREE.PointLight(0xffffff, 2, 3000);
 		this.pointLight = new THREE.PointLight(0xffffff, 2, this.DIST_MIN);
 		this.pointLight.position.set(0, 0, 3000);
-		this.scene.add(this.pointLight);
+	//	this.scene.add(this.pointLight);
 	};
 	
 	
