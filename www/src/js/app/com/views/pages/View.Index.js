@@ -23,6 +23,7 @@ APP.Views.Index = (function(window){
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
+		this.backgroundColor = 'Dark';
 		this.colorizationType = 'FromGreyToColorToGrey';
 		this.cameraType = 'Perspective';
 		
@@ -105,6 +106,12 @@ APP.Views.Index = (function(window){
 	};
 	
 	
+	Index.prototype.changeBackground = function(v) {
+		if(v == 'Dark') this.renderer.setClearColor(0x000000);
+		else if(v == 'Light') this.renderer.setClearColor(0xdddddd);
+	};
+	
+	
 	var _resize = function() {
 		APP.Main.resize();
 		
@@ -123,7 +130,6 @@ APP.Views.Index = (function(window){
 		
 		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
-	//	this.renderer.setClearColor(0xdddddd);
 		this.renderer.setClearColor(0x000000);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		

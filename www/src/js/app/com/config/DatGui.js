@@ -12,11 +12,13 @@ APP.DatGui = (function(window){
 		this.gui = new dat.GUI();
 		var changeXRows = this.gui.add(APP.Views.Index, 'NB_X_ROWS', 10, 40);
 		var changeYRows = this.gui.add(APP.Views.Index, 'NB_Y_ROWS', 10, 40);
+		var background = this.gui.add(APP.Views.Index, 'backgroundColor', ['Dark', 'Light']);
 		var colorization = this.gui.add(APP.Views.Index, 'colorizationType', ['FromGreyToColorToGrey', 'FromGreyToColor', 'FromColorToColor']);
 		var camera = this.gui.add(APP.Views.Index, 'cameraType', ['Perspective3D', 'Flat3D']);
 		
 		changeXRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
 		changeYRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
+		background.onChange(APP.Views.Index.changeBackground.bind(APP.Views.Index));
 		colorization.onChange(_manageColorization.bind(this));
 		camera.onChange(APP.Views.Index.changeView.bind(APP.Views.Index));
 	};
