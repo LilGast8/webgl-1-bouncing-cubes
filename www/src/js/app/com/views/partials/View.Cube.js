@@ -17,7 +17,7 @@ APP.Views.Cube = (function(window){
 		this.rotationX = Math.random()*0.1-0.05;
 		this.rotationY = Math.random()*0.1-0.05;
 		this.rotationZ = Math.random()*0.1-0.05;
-		this.grayId = null;
+		this.greyId = null;
 		
 		this.isKicked = false;
 		this.coeffRotation = 1;
@@ -39,9 +39,10 @@ APP.Views.Cube = (function(window){
 	//	var color = new THREE.Color();
 	//	color.setRGB(Math.random(), Math.random(), Math.random());
 		
-		var grayId = Math.round(Math.random()*255);
-		var color = new THREE.Color('rgb('+grayId+','+grayId+','+grayId+')');
-		this.grayId = color.r;
+	//	var greyId = Math.round(Math.random()*255);
+	//	var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
+	//	this.greyId = color.r;
+		var color = this.darken('init');
 		
 		var geometry = new THREE.BoxGeometry(100, 100, 100);
 		var material = new THREE.MeshPhongMaterial({color:color});
@@ -77,22 +78,15 @@ APP.Views.Cube = (function(window){
 		var cubeDelay = cubeUpDur-0.5;
 		
 		var toColorDur = cubeDelay;
-		var toGrayDur = 0.9;
-		var toGrayDelay = cubeDownDur-toGrayDur;
+		var toGreyDur = 0.9;
+		var toGreyDelay = cubeDownDur-toGreyDur;
 		
-		
-	//	if(APP.Views.Index.colorizationType == 'GrayToColorToGray') console.log('GrayToColorToGray');
-	//	else if(APP.Views.Index.colorizationType == 'GrayToColor') console.log('GrayToColor');
-	//	else if(APP.Views.Index.colorizationType == 'ColorToColor') console.log('ColorToColor');
-		
-		if(APP.Views.Index.colorizationType == 'FromGrayToColorToGray') {
+		if(APP.Views.Index.colorizationType == 'FromGreyToColorToGrey') {
 			TweenLite.to(this.cube.material.color, toColorDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
-			TweenLite.to(this.cube.material.color, toGrayDur, {r:this.grayId, g:this.grayId, b:this.grayId, ease:Quad.easeOut, delay:toGrayDelay});
+			TweenLite.to(this.cube.material.color, toGreyDur, {r:this.greyId, g:this.greyId, b:this.greyId, ease:Quad.easeOut, delay:toGreyDelay});
 		}
-		else if(APP.Views.Index.colorizationType == 'FromGrayToColor') 
-			TweenLite.to(this.cube.material.color, cubeUpDur+cubeDownDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
-
-		
+		else if(APP.Views.Index.colorizationType == 'FromGreyToColor' || APP.Views.Index.colorizationType == 'FromColorToColor') 
+			TweenLite.to(this.cube.material.color, cubeUpDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
 		
 		TweenLite.to(this, cubeUpDur, {coeffRotation:0.1, ease:Quad.easeOut});
 		TweenLite.to(this, cubeDownDur, {coeffRotation:1, ease:Quad.easeOut, delay:cubeDelay});
@@ -102,6 +96,21 @@ APP.Views.Cube = (function(window){
 		TweenLite.to(this.cube.position, cubeDownDur, {z:0, ease:Bounce.easeOut, delay:cubeDelay, onComplete:function(){
 			self.isKicked = false;
 		}});
+	};
+	
+	
+	Cube.prototype.colorize = function() {
+		TweenLite.to(this.cube.material.color, 2, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quad.easeOut});
+	};
+	
+	
+	Cube.prototype.darken = function(type) {
+		var greyId = Math.round(Math.random()*255);
+		var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
+		this.greyId = color.r;
+		
+		if(type == 'init') return color;
+		else if(type == 'change') TweenLite.to(this.cube.material.color, 2, {r:this.greyId, g:this.greyId, b:this.greyId, ease:Quad.easeOut});
 	};
 	
 	

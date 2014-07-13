@@ -12,11 +12,17 @@ APP.DatGui = (function(window){
 		this.gui = new dat.GUI();
 		this.gui.add(APP.Views.Index, 'NB_X_ROWS', 10, 40);
 		this.gui.add(APP.Views.Index, 'NB_Y_ROWS', 10, 40);
-		this.gui.add(APP.Views.Index, 'colorizationType', ['FromGrayToColorToGray', 'FromGrayToColor', 'FromColorToColor']);
+	//	this.gui.add(APP.Views.Index, 'colorizationType', ['FromGreyToColorToGrey', 'FromGreyToColor', 'FromColorToColor']);
+		var colorizationType = this.gui.add(APP.Views.Index, 'colorizationType', ['FromGreyToColorToGrey', 'FromGreyToColor', 'FromColorToColor']);
 		
-	//	gui.add(text, 'speed', -5, 5);
-	//	gui.add(text, 'displayOutline');
-	//	gui.add(text, 'explode');
+		colorizationType.onChange(_manageColorization.bind(this));
+	};
+	
+	
+	var _manageColorization = function(v) {
+		if(v == 'FromGreyToColorToGrey') APP.Views.Index.darkenCubes();
+		else if(v == 'FromGreyToColor') APP.Views.Index.darkenCubes();
+		else if(v == 'FromColorToColor') APP.Views.Index.colorizeCubes();
 	};
 	
 	

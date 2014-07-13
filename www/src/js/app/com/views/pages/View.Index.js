@@ -23,7 +23,7 @@ APP.Views.Index = (function(window){
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
-		this.colorizationType = 'FromGrayToColorToGray';
+		this.colorizationType = 'FromGreyToColorToGrey';
 		
 		this.DIST_MIN = 4000;
 		this.DIST_MAX = 7000;
@@ -66,6 +66,18 @@ APP.Views.Index = (function(window){
 	
 	Index.prototype.unbindEvents = function() {
 		
+	};
+	
+	
+	Index.prototype.colorizeCubes = function() {
+		for(var i=0; i<this.aCubes.length; i++) 
+			this.aCubes[i].colorize();
+	};
+	
+	
+	Index.prototype.darkenCubes = function() {
+		for(var i=0; i<this.aCubes.length; i++) 
+			this.aCubes[i].darken('change');
 	};
 	
 	
