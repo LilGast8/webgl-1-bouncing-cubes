@@ -24,6 +24,7 @@ APP.Views.Index = (function(window){
 		this.aMeshCubes = [];
 		
 		this.colorizationType = 'FromGreyToColorToGrey';
+		this.cameraType = 'Perspective';
 		
 		this.DIST_MIN = 4000;
 		this.DIST_MAX = 7000;
@@ -87,6 +88,23 @@ APP.Views.Index = (function(window){
 	};
 	
 	
+	Index.prototype.changeView = function(v) {
+		if(v == 'Perspective3D') {
+			var rotX = -65*Math.PI/180;
+			var rotY = 0*Math.PI/180;
+			var rotZ = 40*Math.PI/180;
+			TweenLite.to(this.cubeContainer.position, 1.5, {x:390, ease:Quart.easeInOut});
+			TweenLite.to(this.cubeContainer.rotation, 1.5, {x:rotX, y:rotY, z:rotZ, ease:Quart.easeInOut});
+			TweenLite.to(this.camera.position, 1.5, {z:5500, ease:Quart.easeInOut});
+		}
+		else if(v == 'Flat3D') {
+			TweenLite.to(this.cubeContainer.position, 1.5, {x:0, ease:Quart.easeInOut});
+			TweenLite.to(this.cubeContainer.rotation, 1.5, {x:0, y:0, z:0, ease:Quart.easeInOut});
+			TweenLite.to(this.camera.position, 1.5, {z:3300, ease:Quart.easeInOut});
+		}
+	};
+	
+	
 	var _resize = function() {
 		APP.Main.resize();
 		
@@ -101,23 +119,12 @@ APP.Views.Index = (function(window){
 		this.scene = new THREE.Scene();
 		
 		this.camera = new THREE.PerspectiveCamera(50, APP.Main.windowW/APP.Main.windowH, 1, 20000);
-	//	this.camera.position.set(0, 0, 3300);
 		this.camera.position.set(0, 0, 5500);
-		
-	//	this.camera.position.set(0, -2500, 300);
-	//	this.camera.rotation.set(-80, 0, 0);
-		
-	//	this.camera.position.set(-3000, -1500, 3300);
-	//	this.camera.rotation.set(0, 0, 0);
-	//	this.camera.position.set(-4500, -3500, 1300);
-	//	this.camera.rotation.set(1.5, -1, 0);
-		
 		
 		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
 	//	this.renderer.setClearColor(0xdddddd);
 		this.renderer.setClearColor(0x000000);
-	//	this.renderer.setClearColor(Math.random()*0xffffff);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
 		
