@@ -10,12 +10,18 @@ APP.DatGui = (function(window){
 	
 	DatGui.prototype.init = function() {
 		this.gui = new dat.GUI();
-		this.gui.add(APP.Views.Index, 'NB_X_ROWS', 10, 40);
-		this.gui.add(APP.Views.Index, 'NB_Y_ROWS', 10, 40);
-	//	this.gui.add(APP.Views.Index, 'colorizationType', ['FromGreyToColorToGrey', 'FromGreyToColor', 'FromColorToColor']);
+		var changeXRows = this.gui.add(APP.Views.Index, 'NB_X_ROWS', 10, 40);
+		var changeYRows = this.gui.add(APP.Views.Index, 'NB_Y_ROWS', 10, 40);
 		var colorizationType = this.gui.add(APP.Views.Index, 'colorizationType', ['FromGreyToColorToGrey', 'FromGreyToColor', 'FromColorToColor']);
 		
+		changeXRows.onFinishChange(_changeNumberCube.bind(this));
+		changeYRows.onFinishChange(_changeNumberCube.bind(this));
 		colorizationType.onChange(_manageColorization.bind(this));
+	};
+	
+	
+	var _changeNumberCube = function(v) {
+		APP.Views.Index.updateCubes();
 	};
 	
 	

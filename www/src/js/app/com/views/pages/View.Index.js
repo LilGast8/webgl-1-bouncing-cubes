@@ -17,7 +17,7 @@ APP.Views.Index = (function(window){
 		this.projector = null;
 		this.mouseVector = null;
 		
-		this.NB_X_ROWS = 29;
+		this.NB_X_ROWS = 30;
 		this.NB_Y_ROWS = 15;
 		this.NB_CUBES = this.NB_X_ROWS*this.NB_Y_ROWS;
 		this.aCubes = [];
@@ -69,15 +69,21 @@ APP.Views.Index = (function(window){
 	};
 	
 	
-	Index.prototype.colorizeCubes = function() {
-		for(var i=0; i<this.aCubes.length; i++) 
-			this.aCubes[i].colorize();
+	Index.prototype.updateCubes = function() {
+		_removeCubes.call(this);
+		_initCubes.call(this);
 	};
 	
 	
 	Index.prototype.darkenCubes = function() {
 		for(var i=0; i<this.aCubes.length; i++) 
 			this.aCubes[i].darken('change');
+	};
+	
+	
+	Index.prototype.colorizeCubes = function() {
+		for(var i=0; i<this.aCubes.length; i++) 
+			this.aCubes[i].colorize('change');
 	};
 	
 	
@@ -166,6 +172,20 @@ APP.Views.Index = (function(window){
 	};
 	
 	
+	var _removeCubes = function() {
+		for(var i=0; i<this.NB_CUBES; i++) {
+			this.aCubes[i].destroy();
+			this.aCubes[i] = null;
+		}
+		this.aCubes = [];
+		this.aMeshCubes = [];
+		
+		this.NB_X_ROWS = Math.round(this.NB_X_ROWS);
+		this.NB_Y_ROWS = Math.round(this.NB_Y_ROWS);
+		this.NB_CUBES = this.NB_X_ROWS*this.NB_Y_ROWS;
+	};
+	
+	
 	var _render = function() {
 		APP.Main.stats.begin();
 		
@@ -203,7 +223,7 @@ APP.Views.Index = (function(window){
 				}
 			}
 			
-			cubeToKick.kick();
+			cubeToKick.kick(this.colorizationType);
 		}
 		
 		return false;

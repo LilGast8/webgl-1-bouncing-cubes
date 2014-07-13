@@ -36,14 +36,7 @@ APP.Views.Cube = (function(window){
 		this.scene = APP.Views.Index.scene;
 		this.cubeContainer = APP.Views.Index.cubeContainer;
 		
-	//	var color = new THREE.Color();
-	//	color.setRGB(Math.random(), Math.random(), Math.random());
-		
-	//	var greyId = Math.round(Math.random()*255);
-	//	var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
-	//	this.greyId = color.r;
-		var color = this.darken('init');
-		
+		var color = APP.Views.Index.colorizationType == 'FromColorToColor' ? this.colorize('init') : this.darken('init');
 		var geometry = new THREE.BoxGeometry(100, 100, 100);
 		var material = new THREE.MeshPhongMaterial({color:color});
 		
@@ -52,13 +45,37 @@ APP.Views.Cube = (function(window){
 		this.cube.position.y = this.y;
 		this.cube.position.z = this.z;
 		
-	//	this.scene.add(this.cube);
 		this.cubeContainer.add(this.cube);
 	};
 	
 	
 	Cube.prototype.bindEvents = function() {
 		
+	};
+	
+	
+	Cube.prototype.destroy = function() {
+		this.cubeContainer.remove(this.cube);
+		
+		this.name = null;
+		
+		this.x = null;
+		this.y = null;
+		this.z = null;
+		this.rotationX = null;
+		this.rotationY = null;
+		this.rotationZ = null;
+		this.greyId = null;
+		
+		this.isKicked = null;
+		this.coeffRotation = null;
+		
+		this.scene = null;
+		this.cubeContainer = null;
+		this.cube = null;
+		
+		this.scene = null;
+		this.cubeContainer = null;
 	};
 	
 	
@@ -69,7 +86,7 @@ APP.Views.Cube = (function(window){
 	};
 	
 	
-	Cube.prototype.kick = function() {
+	Cube.prototype.kick = function(type) {
 		if(this.isKicked) return false;
 		else this.isKicked = true;
 		
@@ -81,11 +98,11 @@ APP.Views.Cube = (function(window){
 		var toGreyDur = 0.9;
 		var toGreyDelay = cubeDownDur-toGreyDur;
 		
-		if(APP.Views.Index.colorizationType == 'FromGreyToColorToGrey') {
+		if(type == 'FromGreyToColorToGrey') {
 			TweenLite.to(this.cube.material.color, toColorDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
 			TweenLite.to(this.cube.material.color, toGreyDur, {r:this.greyId, g:this.greyId, b:this.greyId, ease:Quad.easeOut, delay:toGreyDelay});
 		}
-		else if(APP.Views.Index.colorizationType == 'FromGreyToColor' || APP.Views.Index.colorizationType == 'FromColorToColor') 
+		else if(type == 'FromGreyToColor' || type == 'FromColorToColor') 
 			TweenLite.to(this.cube.material.color, cubeUpDur, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quart.easeOut});
 		
 		TweenLite.to(this, cubeUpDur, {coeffRotation:0.1, ease:Quad.easeOut});
@@ -99,11 +116,6 @@ APP.Views.Cube = (function(window){
 	};
 	
 	
-	Cube.prototype.colorize = function() {
-		TweenLite.to(this.cube.material.color, 2, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quad.easeOut});
-	};
-	
-	
 	Cube.prototype.darken = function(type) {
 		var greyId = Math.round(Math.random()*255);
 		var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
@@ -111,6 +123,16 @@ APP.Views.Cube = (function(window){
 		
 		if(type == 'init') return color;
 		else if(type == 'change') TweenLite.to(this.cube.material.color, 2, {r:this.greyId, g:this.greyId, b:this.greyId, ease:Quad.easeOut});
+	};
+	
+	
+	Cube.prototype.colorize = function(type) {
+		if(type == 'init') {
+			var color = new THREE.Color();
+			color.setRGB(Math.random(), Math.random(), Math.random());
+			return color;
+		}
+		else if(type == 'change') TweenLite.to(this.cube.material.color, 2, {r:Math.random(), g:Math.random(), b:Math.random(), ease:Quad.easeOut});
 	};
 	
 	
