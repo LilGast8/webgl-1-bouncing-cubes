@@ -26,6 +26,7 @@ APP.Views.Index = (function(window){
 		this.backgroundColor = 'Dark';
 		this.colorizationType = 'FromGreyToColorToGrey';
 		this.cameraType = 'Perspective';
+		this.lightType = 'Perspective';
 		
 		this.DIST_MIN = 4000;
 		this.DIST_MAX = 7000;
@@ -112,6 +113,18 @@ APP.Views.Index = (function(window){
 	};
 	
 	
+	Index.prototype.changeLight = function(v) {
+		if(v == 'DirectionalLight') {
+			this.pointLight.intensity = 0;
+			this.directionalLight.intensity = 1;
+		}
+		else if(v == 'PointLight') {
+			this.directionalLight.intensity = 0;
+			this.pointLight.intensity = 2;
+		}
+	};
+	
+	
 	var _resize = function() {
 		APP.Main.resize();
 		
@@ -133,11 +146,6 @@ APP.Views.Index = (function(window){
 		this.renderer.setClearColor(0x000000);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
-		
-		
-		
-		
-		
 		this.cubeContainer = new THREE.Object3D();
 		this.cubeContainer.position.set(390, 0, 0);
 		var rotX = -65*Math.PI/180;
@@ -146,10 +154,6 @@ APP.Views.Index = (function(window){
 		this.cubeContainer.rotation.set(rotX, rotY, rotZ);
 		this.scene.add(this.cubeContainer);
 		
-		
-		
-		
-		
 		this.projector = new THREE.Projector();
 		this.mouseVector = new THREE.Vector3();
 		
@@ -157,11 +161,10 @@ APP.Views.Index = (function(window){
 		this.directionalLight.position.set(0, 0, 800);
 		this.scene.add(this.directionalLight);
 		
-		
-		this.pointLight = new THREE.PointLight(0xffffff, 2, 3000);
 		this.pointLight = new THREE.PointLight(0xffffff, 2, this.DIST_MIN);
+		this.pointLight.intensity = 0;
 		this.pointLight.position.set(0, 0, 3000);
-	//	this.scene.add(this.pointLight);
+		this.scene.add(this.pointLight);
 	};
 	
 	
@@ -181,6 +184,10 @@ APP.Views.Index = (function(window){
 				posX = -200/2*(this.NB_X_ROWS-1);
 				posY -= 200;
 			}
+		}
+		
+		for(i=0; i<this.aCubes.length; i++) {
+			this.aCubes[i].cube.material.needsUpdate = true;
 		}
 	};
 	
@@ -206,7 +213,7 @@ APP.Views.Index = (function(window){
 			this.aCubes[i].render();
 		}
 		
-		_manageLightDistance.call(this);
+	//	_manageLightDistance.call(this);
 		
 		this.renderer.render(this.scene, this.camera);
 		
@@ -215,9 +222,9 @@ APP.Views.Index = (function(window){
 	
 	
 	var _kick = function(e) {
-		var posX = (-APP.Main.windowW/2+e.clientX)*2;
-		var posY = (APP.Main.windowH/2-e.clientY)*2;
-		TweenLite.to(this.pointLight.position, 1.5, {x:posX, y:posY, ease:Quad.easeOut});
+	//	var posX = (-APP.Main.windowW/2+e.clientX)*2;
+	//	var posY = (APP.Main.windowH/2-e.clientY)*2;
+	//	TweenLite.to(this.pointLight.position, 1.5, {x:posX, y:posY, ease:Quad.easeOut});
 		
 		this.mouseVector.x = (e.clientX/APP.Main.windowW)*2-1;
 		this.mouseVector.y = -(e.clientY/window.innerHeight)*2+1;

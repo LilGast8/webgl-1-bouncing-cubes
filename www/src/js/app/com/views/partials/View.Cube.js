@@ -41,9 +41,7 @@ APP.Views.Cube = (function(window){
 		var material = new THREE.MeshPhongMaterial({color:color});
 		
 		this.cube = new THREE.Mesh(geometry, material);
-		this.cube.position.x = this.x;
-		this.cube.position.y = this.y;
-		this.cube.position.z = this.z;
+		this.cube.position.set(this.x, this.y, this.z);
 		
 		this.cubeContainer.add(this.cube);
 	};
