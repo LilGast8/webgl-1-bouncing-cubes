@@ -36,7 +36,7 @@ APP.Views.Cube = (function(window){
 		this.scene = APP.Views.Index.scene;
 		this.cubeContainer = APP.Views.Index.cubeContainer;
 		
-		var color = APP.Views.Index.colorizationType == 'FromColorToColor' ? this.colorize('init') : this.darken('init');
+		var color = APP.Views.Index.colorizationMode == 'FromColorToColor' ? this.colorize('init') : this.darken('init');
 		var geometry = new THREE.BoxGeometry(100, 100, 100);
 		var material = new THREE.MeshPhongMaterial({color:color});
 		

@@ -23,15 +23,29 @@ APP.Views.Index = (function(window){
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
-		this.backgroundColor = 'Dark';
-		this.colorizationType = 'FromGreyToColorToGrey';
-		this.cameraType = 'Perspective';
-		this.lightType = 'Perspective';
+		this.P3D = {
+			CC_X : 390,
+			CC_ROT_X : -65*Math.PI/180,
+			CC_ROT_Y : 0*Math.PI/180,
+			CC_ROT_Z : 40*Math.PI/180,
+			CAM_Z : 5500
+		};
+		this.F3D = {
+			CC_X : 0,
+			CC_ROT_X : 0,
+			CC_ROT_Y : 0,
+			CC_ROT_Z : 0,
+			CAM_Z : 3300
+		};
+		this.GL_INTENSITY = 1;
+		this.PL_INTENSITY = 2;
+		this.PL_DISTANCE = 4000;
+		this.TCFDL_DISTANCE = 2800;
 		
-		this.DIST_MIN = 4000;
-		this.DIST_MAX = 7000;
-		this.SPEED_ENLARGE = 20;
-		this.SPEED_REDUCE = 50;
+		this.backgroundColor = 'Dark';
+		this.colorizationMode = 'FromGreyToColorToGrey';
+		this.cameraMode = 'Perspective3D';
+		this.lightMode = 'GlobalLight';
 		
 		this.isEnlarge = false;
 	}
@@ -92,17 +106,14 @@ APP.Views.Index = (function(window){
 	
 	Index.prototype.changeView = function(v) {
 		if(v == 'Perspective3D') {
-			var rotX = -65*Math.PI/180;
-			var rotY = 0*Math.PI/180;
-			var rotZ = 40*Math.PI/180;
-			TweenLite.to(this.cubeContainer.position, 1.5, {x:390, ease:Quart.easeInOut});
-			TweenLite.to(this.cubeContainer.rotation, 1.5, {x:rotX, y:rotY, z:rotZ, ease:Quart.easeInOut});
-			TweenLite.to(this.camera.position, 1.5, {z:5500, ease:Quart.easeInOut});
+			TweenLite.to(this.cubeContainer.position, 1.5, {x:this.P3D.CC_X, ease:Quart.easeInOut});
+			TweenLite.to(this.cubeContainer.rotation, 1.5, {x:this.P3D.CC_ROT_X, y:this.P3D.CC_ROT_Y, z:this.P3D.CC_ROT_Z, ease:Quart.easeInOut});
+			TweenLite.to(this.camera.position, 1.5, {z:this.P3D.CAM_Z, ease:Quart.easeInOut});
 		}
 		else if(v == 'Flat3D') {
-			TweenLite.to(this.cubeContainer.position, 1.5, {x:0, ease:Quart.easeInOut});
-			TweenLite.to(this.cubeContainer.rotation, 1.5, {x:0, y:0, z:0, ease:Quart.easeInOut});
-			TweenLite.to(this.camera.position, 1.5, {z:3300, ease:Quart.easeInOut});
+			TweenLite.to(this.cubeContainer.position, 1.5, {x:this.F3D.CC_X, ease:Quart.easeInOut});
+			TweenLite.to(this.cubeContainer.rotation, 1.5, {x:this.F3D.CC_ROT_X, y:this.F3D.CC_ROT_Y, z:this.F3D.CC_ROT_Y, ease:Quart.easeInOut});
+			TweenLite.to(this.camera.position, 1.5, {z:this.F3D.CAM_Z, ease:Quart.easeInOut});
 		}
 	};
 	
@@ -114,13 +125,18 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.changeLight = function(v) {
-		if(v == 'DirectionalLight') {
-			this.pointLight.intensity = 0;
-			this.directionalLight.intensity = 1;
+		if(v == 'GlobalLight') {
+			TweenLite.to(this.pointLight, 2, {intensity:0, ease:Quad.easeOut});
+			TweenLite.to(this.directionalLight, 2, {intensity:this.GL_INTENSITY, ease:Quad.easeOut});
 		}
-		else if(v == 'PointLight') {
-			this.directionalLight.intensity = 0;
-			this.pointLight.intensity = 2;
+		else if(v == 'PartialLight') {
+			TweenLite.to(this.directionalLight, 2, {intensity:0, ease:Quad.easeOut});
+			TweenLite.to(this.pointLight, 2, {intensity:this.PL_INTENSITY, distance:this.PL_DISTANCE, ease:Quad.easeOut});
+		}
+		else if(v == 'TheyComeFromDarkness') {
+			TweenLite.to(this.directionalLight, 2, {intensity:0, ease:Quad.easeOut});
+			TweenLite.to(this.pointLight, 2, {intensity:this.PL_INTENSITY, distance:this.TCFDL_DISTANCE, ease:Quad.easeOut});
+			TweenLite.to(this.pointLight.position, 2, {x:0, y:0, ease:Quad.easeOut});
 		}
 	};
 	
@@ -148,21 +164,17 @@ APP.Views.Index = (function(window){
 		
 		this.cubeContainer = new THREE.Object3D();
 		this.cubeContainer.position.set(390, 0, 0);
-		var rotX = -65*Math.PI/180;
-		var rotY = 0*Math.PI/180;
-		var rotZ = 40*Math.PI/180;
-		this.cubeContainer.rotation.set(rotX, rotY, rotZ);
+		this.cubeContainer.rotation.set(this.P3D.CC_ROT_X, this.P3D.CC_ROT_Y, this.P3D.CC_ROT_Z);
 		this.scene.add(this.cubeContainer);
 		
 		this.projector = new THREE.Projector();
 		this.mouseVector = new THREE.Vector3();
 		
-		this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+		this.directionalLight = new THREE.DirectionalLight(0xffffff, this.GL_INTENSITY);
 		this.directionalLight.position.set(0, 0, 800);
 		this.scene.add(this.directionalLight);
 		
-		this.pointLight = new THREE.PointLight(0xffffff, 2, this.DIST_MIN);
-		this.pointLight.intensity = 0;
+		this.pointLight = new THREE.PointLight(0xffffff, 0, this.PL_DISTANCE);
 		this.pointLight.position.set(0, 0, 3000);
 		this.scene.add(this.pointLight);
 	};
@@ -213,8 +225,6 @@ APP.Views.Index = (function(window){
 			this.aCubes[i].render();
 		}
 		
-	//	_manageLightDistance.call(this);
-		
 		this.renderer.render(this.scene, this.camera);
 		
 		APP.Main.stats.end();
@@ -222,9 +232,11 @@ APP.Views.Index = (function(window){
 	
 	
 	var _kick = function(e) {
-	//	var posX = (-APP.Main.windowW/2+e.clientX)*2;
-	//	var posY = (APP.Main.windowH/2-e.clientY)*2;
-	//	TweenLite.to(this.pointLight.position, 1.5, {x:posX, y:posY, ease:Quad.easeOut});
+		if(this.lightMode == 'PartialLight') {
+			var posX = (-APP.Main.windowW/2+e.clientX)*4;
+			var posY = (APP.Main.windowH/2-e.clientY)*4;
+			TweenLite.to(this.pointLight.position, 1.5, {x:posX, y:posY, ease:Quad.easeOut});
+		}
 		
 		this.mouseVector.x = (e.clientX/APP.Main.windowW)*2-1;
 		this.mouseVector.y = -(e.clientY/window.innerHeight)*2+1;
@@ -243,7 +255,7 @@ APP.Views.Index = (function(window){
 				}
 			}
 			
-			cubeToKick.kick(this.colorizationType);
+			cubeToKick.kick(this.colorizationMode);
 		}
 		
 		return false;
@@ -257,16 +269,6 @@ APP.Views.Index = (function(window){
 	
 	var _reduceLight = function() {
 		this.isEnlarge = false;
-	};
-	
-	
-	var _manageLightDistance = function() {
-		var lightDistance = this.pointLight.distance;
-		
-		if(this.isEnlarge && lightDistance<this.DIST_MAX) 
-			this.pointLight.distance += this.SPEED_ENLARGE;
-		else if(!this.isEnlarge && lightDistance>this.DIST_MIN) 
-			this.pointLight.distance -= this.SPEED_REDUCE;
 	};
 	
 	
