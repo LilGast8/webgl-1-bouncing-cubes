@@ -23,6 +23,8 @@ APP.Views.Index = (function(window){
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
+		this.BG_DARK = 0x000000;
+		this.BG_LIGHT = 0xdddddd;
 		this.P3D = {
 			CC_X : 390,
 			CC_ROT_X : -65*Math.PI/180,
@@ -42,13 +44,14 @@ APP.Views.Index = (function(window){
 		this.PL_DISTANCE = 4000;
 		this.TCFDL_DISTANCE = 2800;
 		
+		this.SPEED_BG_CHANGE = 5;
+		this.nbFrameSinceBgChance = 0;
+		
 		this.backgroundColor = 'Dark';
 		this.colorizationMode = 'FromGreyToColorToGrey';
 		this.cameraMode = 'Perspective3D';
 		this.lightMode = 'GlobalLight';
 		this.autoKick = false;
-		
-		this.isEnlarge = false;
 	}
 	
 	
@@ -73,12 +76,6 @@ APP.Views.Index = (function(window){
 		
 		this.mouseMoveSceneProxy = $.proxy(_kick, this);
 		this.$.sceneContainer.on('mousemove', this.mouseMoveSceneProxy);
-		
-		this.mouseDownSceneProxy = $.proxy(_enlargeLight, this);
-		this.$.sceneContainer.on('mousedown', this.mouseDownSceneProxy);
-		
-		this.mouseUpSceneProxy = $.proxy(_reduceLight, this);
-		this.$.sceneContainer.on('mouseup', this.mouseUpSceneProxy);
 	};
 	
 	
@@ -120,8 +117,8 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.changeBackground = function(v) {
-		if(v == 'Dark') this.renderer.setClearColor(0x000000);
-		else if(v == 'Light') this.renderer.setClearColor(0xdddddd);
+		if(v == 'Dark') this.renderer.setClearColor(this.BG_DARK);
+		else if(v == 'Light') this.renderer.setClearColor(this.BG_LIGHT);
 	};
 	
 	
@@ -160,7 +157,7 @@ APP.Views.Index = (function(window){
 		
 		this.renderer = new THREE.WebGLRenderer({antialias:true});
 		this.renderer.setSize(APP.Main.windowW, APP.Main.windowH);
-		this.renderer.setClearColor(0x000000);
+		this.renderer.setClearColor(this.BG_DARK);
 		this.$.sceneContainer[0].appendChild(this.renderer.domElement);
 		
 		this.cubeContainer = new THREE.Object3D();
@@ -229,6 +226,16 @@ APP.Views.Index = (function(window){
 			if(i == idCubeToKick) this.aCubes[i].kick(this.colorizationMode);
 		}
 		
+		if(this.backgroundColor == 'EpilepticKiller') {
+			this.nbFrameSinceBgChance++;
+			
+			if(this.nbFrameSinceBgChance == this.SPEED_BG_CHANGE) {
+				this.nbFrameSinceBgChance = 0;
+				var color = new THREE.Color(Math.random(), Math.random(), Math.random());
+				this.renderer.setClearColor(color);
+			}
+		}
+		
 		this.renderer.render(this.scene, this.camera);
 		
 		APP.Main.stats.end();
@@ -263,16 +270,6 @@ APP.Views.Index = (function(window){
 		}
 		
 		return false;
-	};
-	
-	
-	var _enlargeLight = function() {
-		this.isEnlarge = true;
-	};
-	
-	
-	var _reduceLight = function() {
-		this.isEnlarge = false;
 	};
 	
 	

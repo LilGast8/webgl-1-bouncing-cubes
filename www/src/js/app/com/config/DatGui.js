@@ -23,19 +23,32 @@ APP.DatGui = (function(window){
 		
 		changeXRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
 		changeYRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
-		background.onChange(APP.Views.Index.changeBackground.bind(APP.Views.Index));
+	//	background.onChange(APP.Views.Index.changeBackground.bind(APP.Views.Index));
+		background.onChange(_manageBackground.bind(this));
 		colorization.onChange(_manageColorization.bind(this));
 		camera.onChange(_manageCamera.bind(this));
 		light.onChange(_manageLight.bind(this));
 		
 		this.bgcModeController = this.gui.__controllers[2];
 		this.bgcModeSelect = this.bgcModeController.__select;
+		this.cameraModeController = this.gui.__controllers[4];
+	//	this.cameraModeSelect = this.cameraModeController.__select;
 		this.lightModeController = this.gui.__controllers[5];
 		this.lightModeSelect = this.lightModeController.__select;
 		
 		_disabledLightSelect.call(this);
 	};
 	
+	
+	var _manageBackground = function(v) {
+		if(v != 'Dark') {
+			if(this.lightModeController.getValue() != 'GlobalLight') this.lightModeController.setValue('GlobalLight');
+			_disabledLightSelect.call(this);
+		}
+		else if(this.cameraModeController.getValue() == 'Flat3D') _enabledLightSelect.call(this);
+		
+		APP.Views.Index.changeBackground(v);
+	};
 	
 	var _manageColorization = function(v) {
 		if(v == 'FromGreyToColorToGrey' || v == 'FromGreyToColor') APP.Views.Index.darkenCubes();
@@ -48,7 +61,7 @@ APP.DatGui = (function(window){
 			if(this.lightModeController.getValue() != 'GlobalLight') this.lightModeController.setValue('GlobalLight');
 			_disabledLightSelect.call(this);
 		}
-		else _enabledLightSelect.call(this);
+		else if(this.bgcModeController.getValue() == 'Dark')_enabledLightSelect.call(this);
 		
 		APP.Views.Index.changeView(v);
 	};
