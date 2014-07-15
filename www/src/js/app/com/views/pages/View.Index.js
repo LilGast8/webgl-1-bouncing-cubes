@@ -46,6 +46,7 @@ APP.Views.Index = (function(window){
 		this.colorizationMode = 'FromGreyToColorToGrey';
 		this.cameraMode = 'Perspective3D';
 		this.lightMode = 'GlobalLight';
+		this.autoKick = false;
 		
 		this.isEnlarge = false;
 	}
@@ -221,8 +222,11 @@ APP.Views.Index = (function(window){
 	var _render = function() {
 		APP.Main.stats.begin();
 		
+		var idCubeToKick = !this.autoKick ? null : Math.round(Math.random()*this.NB_CUBES);
+		
 		for(var i=0; i<this.aCubes.length; i++) {
 			this.aCubes[i].render();
+			if(i == idCubeToKick) this.aCubes[i].kick(this.colorizationMode);
 		}
 		
 		this.renderer.render(this.scene, this.camera);
