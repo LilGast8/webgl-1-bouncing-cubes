@@ -17,9 +17,9 @@ APP.Views.Index = (function(window){
 		this.projector = null;
 		this.mouseVector = null;
 		
-		this.NB_X_ROWS = 30;
-		this.NB_Y_ROWS = 15;
-		this.NB_CUBES = this.NB_X_ROWS*this.NB_Y_ROWS;
+		this.nbRowsX = 30;
+		this.nbRowsY = 15;
+		this.NB_CUBES = this.nbRowsX*this.nbRowsY;
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
@@ -52,7 +52,8 @@ APP.Views.Index = (function(window){
 		this.cameraMode = 'Perspective3D';
 		this.lightMode = 'GlobalLight';
 		this.autoKick = false;
-		this.MASSIVE_KICK_DELAY_MAX = 500;
+		this.mkDelay = 800;
+		this.mkByWaves = false;
 	}
 	
 	
@@ -92,13 +93,13 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.darkenCubes = function() {
-		for(var i=0; i<this.aCubes.length; i++) 
+		for(var i=0; i<this.NB_CUBES; i++) 
 			this.aCubes[i].darken('change');
 	};
 	
 	
 	Index.prototype.colorizeCubes = function() {
-		for(var i=0; i<this.aCubes.length; i++) 
+		for(var i=0; i<this.NB_CUBES; i++) 
 			this.aCubes[i].colorize('change');
 	};
 	
@@ -141,7 +142,11 @@ APP.Views.Index = (function(window){
 	
 	
 	Index.prototype.massiveKick = function() {
-		for(var i=0; i<this.NB_CUBES; i++) this.aCubes[i].delayKick(this.colorizationMode);
+		var delay = 0;
+		for(var i=0; i<this.NB_CUBES; i++) {
+			delay = !this.mkByWaves ? Math.random()*this.mkDelay : parseInt(i/this.nbRowsX)*this.mkDelay;
+			this.aCubes[i].delayKick(this.colorizationMode, delay);
+		}
 	};
 	
 	
@@ -186,8 +191,8 @@ APP.Views.Index = (function(window){
 	
 	var _initCubes = function() {
 		var cube = null;
-		var posX = -200/2*(this.NB_X_ROWS-1);
-		var posY = 200/2*(this.NB_Y_ROWS-1);
+		var posX = -200/2*(this.nbRowsX-1);
+		var posY = 200/2*(this.nbRowsY-1);
 		
 		for(var i=0; i<this.NB_CUBES; i++) {
 			cube = new APP.Views.Cube(i+1, posX, posY);
@@ -196,13 +201,13 @@ APP.Views.Index = (function(window){
 			this.aMeshCubes.push(cube.cube);
 			
 			posX += 200;
-			if(i%this.NB_X_ROWS == this.NB_X_ROWS-1) {
-				posX = -200/2*(this.NB_X_ROWS-1);
+			if(i%this.nbRowsX == this.nbRowsX-1) {
+				posX = -200/2*(this.nbRowsX-1);
 				posY -= 200;
 			}
 		}
 		
-		for(i=0; i<this.aCubes.length; i++) {
+		for(i=0; i<this.NB_CUBES; i++) {
 			this.aCubes[i].cube.material.needsUpdate = true;
 		}
 	};
@@ -216,9 +221,7 @@ APP.Views.Index = (function(window){
 		this.aCubes = [];
 		this.aMeshCubes = [];
 		
-		this.NB_X_ROWS = Math.round(this.NB_X_ROWS);
-		this.NB_Y_ROWS = Math.round(this.NB_Y_ROWS);
-		this.NB_CUBES = this.NB_X_ROWS*this.NB_Y_ROWS;
+		this.NB_CUBES = this.nbRowsX*this.nbRowsY;
 	};
 	
 	
@@ -227,7 +230,7 @@ APP.Views.Index = (function(window){
 		
 		var idCubeToKick = !this.autoKick ? null : Math.round(Math.random()*this.NB_CUBES);
 		
-		for(var i=0; i<this.aCubes.length; i++) {
+		for(var i=0; i<this.NB_CUBES; i++) {
 			this.aCubes[i].render();
 			if(i == idCubeToKick) this.aCubes[i].kick(this.colorizationMode);
 		}
@@ -265,7 +268,7 @@ APP.Views.Index = (function(window){
 			var clickedCube = intersects[0];
 			var cubeToKick = null;
 			
-			for(var i=0; i<this.aCubes.length; i++) {
+			for(var i=0; i<this.NB_CUBES; i++) {
 				if(clickedCube.object.uuid == this.aMeshCubes[i].uuid) {
 					cubeToKick = this.aCubes[i];
 					break;

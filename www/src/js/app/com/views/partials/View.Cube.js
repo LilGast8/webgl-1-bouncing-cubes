@@ -114,11 +114,12 @@ APP.Views.Cube = (function(window){
 	};
 	
 	
-	Cube.prototype.delayKick = function(colorizationMode) {
+	Cube.prototype.delayKick = function(colorizationMode, delay) {
 		var self = this;
+		
 		setTimeout(function() {
 			self.kick(colorizationMode);
-		}, Math.random()*APP.Views.Index.MASSIVE_KICK_DELAY_MAX);
+		}, delay);
 	};
 	
 	
