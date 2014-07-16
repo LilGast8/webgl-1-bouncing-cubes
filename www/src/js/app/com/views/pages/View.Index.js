@@ -52,6 +52,7 @@ APP.Views.Index = (function(window){
 		this.cameraMode = 'Perspective3D';
 		this.lightMode = 'GlobalLight';
 		this.autoKick = false;
+		this.MASSIVE_KICK_DELAY_MAX = 500;
 	}
 	
 	
@@ -136,6 +137,11 @@ APP.Views.Index = (function(window){
 			TweenLite.to(this.pointLight, 2, {intensity:this.PL_INTENSITY, distance:this.TCFDL_DISTANCE, ease:Quad.easeOut});
 			TweenLite.to(this.pointLight.position, 2, {x:0, y:0, ease:Quad.easeOut});
 		}
+	};
+	
+	
+	Index.prototype.massiveKick = function() {
+		for(var i=0; i<this.NB_CUBES; i++) this.aCubes[i].delayKick(this.colorizationMode);
 	};
 	
 	

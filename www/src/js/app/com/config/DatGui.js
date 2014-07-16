@@ -20,6 +20,8 @@ APP.DatGui = (function(window){
 		var camera = this.gui.add(APP.Views.Index, 'cameraMode', ['Perspective3D', 'Flat3D']);
 		var light = this.gui.add(APP.Views.Index, 'lightMode', ['GlobalLight', 'PartialLight', 'TheyComeFromDarkness']);
 		this.gui.add(APP.Views.Index, 'autoKick');
+		this.gui.add(APP.Views.Index, 'massiveKick');
+		this.gui.add(APP.Views.Index, 'MASSIVE_KICK_DELAY_MAX', 200, 1500, 100).step(10);
 		
 		changeXRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
 		changeYRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));

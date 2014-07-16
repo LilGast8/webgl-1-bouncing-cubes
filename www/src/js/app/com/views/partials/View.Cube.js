@@ -114,6 +114,14 @@ APP.Views.Cube = (function(window){
 	};
 	
 	
+	Cube.prototype.delayKick = function(colorizationMode) {
+		var self = this;
+		setTimeout(function() {
+			self.kick(colorizationMode);
+		}, Math.random()*APP.Views.Index.MASSIVE_KICK_DELAY_MAX);
+	};
+	
+	
 	Cube.prototype.darken = function(type) {
 		var greyId = Math.round(Math.random()*255);
 		var color = new THREE.Color('rgb('+greyId+','+greyId+','+greyId+')');
