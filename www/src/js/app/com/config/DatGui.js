@@ -23,29 +23,19 @@ APP.DatGui = (function(window){
 		
 		changeXRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
 		changeYRows.onFinishChange(APP.Views.Index.updateCubes.bind(APP.Views.Index));
-	//	background.onChange(APP.Views.Index.changeBackground.bind(APP.Views.Index));
 		background.onChange(_manageBackground.bind(this));
 		colorization.onChange(_manageColorization.bind(this));
 		camera.onChange(_manageCamera.bind(this));
 		light.onChange(_manageLight.bind(this));
 		
 		this.bgcModeController = this.gui.__controllers[2];
-		this.bgcModeSelect = this.bgcModeController.__select;
 		this.cameraModeController = this.gui.__controllers[4];
-	//	this.cameraModeSelect = this.cameraModeController.__select;
 		this.lightModeController = this.gui.__controllers[5];
-		this.lightModeSelect = this.lightModeController.__select;
-		
-		_disabledLightSelect.call(this);
 	};
 	
 	
 	var _manageBackground = function(v) {
-		if(v != 'Dark') {
-			if(this.lightModeController.getValue() != 'GlobalLight') this.lightModeController.setValue('GlobalLight');
-			_disabledLightSelect.call(this);
-		}
-		else if(this.cameraModeController.getValue() == 'Flat3D') _enabledLightSelect.call(this);
+		if(v != 'Dark' && this.lightModeController.getValue() != 'GlobalLight') this.lightModeController.setValue('GlobalLight');
 		
 		APP.Views.Index.changeBackground(v);
 	};
@@ -57,44 +47,17 @@ APP.DatGui = (function(window){
 	
 	
 	var _manageCamera = function(v) {
-		if(v == 'Perspective3D') {
-			if(this.lightModeController.getValue() != 'GlobalLight') this.lightModeController.setValue('GlobalLight');
-			_disabledLightSelect.call(this);
-		}
-		else if(this.bgcModeController.getValue() == 'Dark')_enabledLightSelect.call(this);
+		if(v == 'Perspective3D' && this.lightModeController.getValue() != 'GlobalLight') this.lightModeController.setValue('GlobalLight');
 		
 		APP.Views.Index.changeView(v);
 	};
 	
 	
 	var _manageLight = function(v) {
-		if(v == 'TheyComeFromDarkness') {
-			if(this.bgcModeController.getValue() != 'Dark') this.bgcModeController.setValue('Dark');
-			_disabledBgcSelect.call(this);
-		}
-		else _enabledBgcSelect.call(this);
+		if(v != 'GlobalLight' && this.cameraModeController.getValue() != 'Flat3D') this.cameraModeController.setValue('Flat3D');
+		if(v != 'GlobalLight' && this.bgcModeController.getValue() != 'Dark') this.bgcModeController.setValue('Dark');
 		
 		APP.Views.Index.changeLight(v);
-	};
-	
-	
-	var _disabledBgcSelect = function() {
-		this.bgcModeSelect.disabled = true;
-	};
-	
-	
-	var _enabledBgcSelect = function() {
-		this.bgcModeSelect.disabled = false;
-	};
-	
-	
-	var _disabledLightSelect = function() {
-		this.lightModeSelect.disabled = true;
-	};
-	
-	
-	var _enabledLightSelect = function() {
-		this.lightModeSelect.disabled = false;
 	};
 	
 	

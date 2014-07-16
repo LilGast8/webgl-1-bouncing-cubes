@@ -73,7 +73,7 @@
 <script src="<?php echo WEB_ROOT; ?>src/js/lib/signals-1.0.0.min.js"></script>
 <script src="<?php echo WEB_ROOT; ?>src/js/lib/stats.min.js"></script>
 <script src="<?php echo WEB_ROOT; ?>src/js/lib/dat.gui.min.js"></script>
-<script src="<?php echo WEB_ROOT; ?>src/js/lib/three.min.js"></script>
+<script src="<?php echo WEB_ROOT; ?>src/js/lib/three-r68.min.js"></script>
 
 <!-- Init -->
 <script src="<?php echo WEB_ROOT; ?>src/js/app/InitApp.js"></script>
