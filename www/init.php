@@ -9,7 +9,7 @@ define('PROD', false);
 
 
 /* -------- Localhost -------- */
-$localhost = strpos($_SERVER['HTTP_HOST'], 'localhost') !== false ? true : false;
+$localhost = $_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_PORT'] == '8888' ? true : false;
 define('LOCALHOST', $localhost);
 
 
